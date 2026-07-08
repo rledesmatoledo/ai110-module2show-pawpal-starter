@@ -55,21 +55,18 @@ Paste a sample of your app's CLI or Streamlit output here so a reader can see wh
 ```
 
 ## 🧪 Testing PawPal+
+The suite covers 22 tests across five behaviors: sorting tasks by time, filtering by pet and status, recurring task regeneration, conflict detection, and scheduling logic that fits or defers tasks based on available time.
 
-```bash
-# Run the full test suite:
-pytest
+python3 -m pytest
+========================================================================================= test session starts =========================================================================================
+platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0
+rootdir: /Users/robertoledesma/ai110-module2show-pawpal-starter
+collected 22 items                                                                                                                                                                                    
 
-# Run with coverage:
-pytest --cov
-```
+tests/test_pawpal.py ......................                                                                                                                                                     [100%]
 
-Sample test output:
-
-```
-# Paste your pytest output here
-```
-
+========================================================================================= 22 passed in 0.02s ==========================================================================================
+Confidence level 4/5 stars 
 ## 📐 Smarter Scheduling
 
 > Fill in once you've implemented scheduling logic.
