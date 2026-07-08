@@ -77,3 +77,20 @@ Yes. I had the AI review my design and made two changes. I removed explain_reaso
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+## Sample Output:
+========================================
+Today's Schedule for Alex
+(Available time: 60 minutes)
+========================================
+
+Scheduled:
+  - Morning walk (30 min, high)
+  - Feed (10 min, high)
+  - Brush coat (15 min, medium)
+
+Deferred (didn't fit):
+  - Vet checkup (60 min, low)
+
+Total time used: 55 / 60 minutes
+Reasoning: Scheduled 3 of 4 task(s) in priority order, using 55 of 60 available minutes. Deferred 1 task(s) that did not fit.
