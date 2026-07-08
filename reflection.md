@@ -34,6 +34,8 @@ Yes. I had the AI review my design and made two changes. I removed explain_reaso
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
 
+My conflict detection only looks at the time of day, not the date. It treats every task as if it's on the same day, so a daily task done today and its new copy for tomorrow can get flagged as a fake conflict. I kept it this way because it's a daily planner and the check stays simple. Fixing it would just mean grouping by date first.
+
 ---
 
 ## 3. AI Collaboration
