@@ -2,10 +2,15 @@
 
 ## 1. System Design
 
+1. Create or edit task for pet that includes the duration or the priority of the task.
+2. Create a daily plan based on what the owner availability is.
+3. View the plan and give reasons behind why it chose that plan.
+
 **a. Initial design**
 
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
+
 
 **b. Design changes**
 

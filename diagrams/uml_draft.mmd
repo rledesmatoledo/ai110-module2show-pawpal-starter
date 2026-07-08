@@ -1,0 +1,60 @@
+classDiagram
+    class Owner {
+        +String name
+        +List~Pet~ pets
+        +addPet(Pet pet) void
+        +removePet(Pet pet) void
+        +getPets() List~Pet~
+    }
+
+    class Pet {
+        +String name
+        +String species
+        +String breed
+        +List~Task~ tasks
+        +addTask(Task task) void
+        +removeTask(Task task) void
+        +getTasks() List~Task~
+    }
+
+    class Task {
+        +String name
+        +int duration
+        +Priority priority
+        +String category
+        +Recurrence recurs
+        +isRecurring() boolean
+    }
+
+    class Scheduler {
+        +generatePlan(List~Task~ tasks, int availableTime) DailyPlan
+        +prioritizeTasks(List~Task~ tasks) List~Task~
+        +explainReasoning() String
+    }
+
+    class DailyPlan {
+        +List~Task~ scheduledTasks
+        +int totalTime
+        +String reasoning
+    }
+
+    class Priority {
+        <<enumeration>>
+        LOW
+        MEDIUM
+        HIGH
+    }
+
+    class Recurrence {
+        <<enumeration>>
+        DAILY
+        WEEKLY
+        NONE
+    }
+
+    Owner "1" o-- "*" Pet : owns
+    Pet "1" o-- "*" Task : has
+    Scheduler ..> Task : reads
+    Scheduler ..> DailyPlan : generates
+    Task ..> Priority : uses
+    Task ..> Recurrence : uses
