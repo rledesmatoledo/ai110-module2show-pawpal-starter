@@ -1,0 +1,75 @@
+classDiagram
+    %% PawPal+ class diagram — reflects the final pawpal_system.py (Phase 4).
+
+    class Priority {
+        <<enumeration>>
+        LOW
+        MEDIUM
+        HIGH
+    }
+
+    class Recurrence {
+        <<enumeration>>
+        DAILY
+        WEEKLY
+        NONE
+    }
+
+    class Task {
+        +str name
+        +int duration
+        +Priority priority
+        +str category
+        +Recurrence recurs
+        +str time
+        +date due_date
+        +bool completed
+        +is_recurring() bool
+        +mark_complete() Optional~Task~
+    }
+
+    class Pet {
+        +str name
+        +str species
+        +str breed
+        +list~Task~ tasks
+        +add_task(task) None
+        +remove_task(task) None
+        +get_tasks() list~Task~
+        +complete_task(task) Optional~Task~
+    }
+
+    class Owner {
+        +str name
+        +list~Pet~ pets
+        +add_pet(pet) None
+        +remove_pet(pet) None
+        +get_pets() list~Pet~
+        +get_all_tasks() list~Task~
+        +filter_tasks(pet_name, completed) list~Task~
+    }
+
+    class DailyPlan {
+        +list~Task~ scheduled_tasks
+        +int total_time
+        +str reasoning
+        +list~Task~ deferred_tasks
+        +list~tuple~ conflicts
+    }
+
+    class Scheduler {
+        +generate_plan(tasks, available_time) DailyPlan
+        +prioritize_tasks(tasks) list~Task~
+        +find_conflicts(tasks) list~tuple~
+        +sort_by_time(tasks) list~Task~
+        -_to_minutes(hhmm)$ int
+    }
+
+    Owner "1" o-- "*" Pet : owns
+    Pet "1" o-- "*" Task : has
+    Task --> Priority : priority
+    Task --> Recurrence : recurs
+    Owner ..> Task : aggregates
+    Scheduler ..> DailyPlan : creates
+    Scheduler ..> Task : reads
+    DailyPlan o-- "*" Task : holds

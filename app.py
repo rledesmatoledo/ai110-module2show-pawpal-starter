@@ -1,8 +1,33 @@
+from datetime import time
+
 import streamlit as st
 
 from pawpal_system import Owner, Pet, Task, Scheduler, Priority, Recurrence
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
+
+
+# --- Small display helpers -------------------------------------------------
+def _to_minutes(hhmm: str) -> int:
+    """Convert an 'HH:MM' string to minutes since midnight."""
+    hours, minutes = hhmm.split(":")
+    return int(hours) * 60 + int(minutes)
+
+
+def _to_hhmm(minutes: int) -> str:
+    """Convert minutes since midnight back to a zero-padded 'HH:MM' string."""
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
+def _overlap_window(first: Task, second: Task) -> str:
+    """Return the 'HH:MM–HH:MM' window where two tasks overlap in time."""
+    start = max(_to_minutes(first.time), _to_minutes(second.time))
+    end = min(
+        _to_minutes(first.time) + first.duration,
+        _to_minutes(second.time) + second.duration,
+    )
+    return f"{_to_hhmm(start)}–{_to_hhmm(end)}"
+
 
 # Streamlit reruns this script top-to-bottom on every interaction. Store the
 # Owner in st.session_state so it (and its pets/tasks) persists across reruns
@@ -91,11 +116,15 @@ else:
     with col3:
         priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
 
-    col4, col5 = st.columns(2)
+    col4, col5, col6 = st.columns(3)
     with col4:
         category = st.text_input("Category", value="general")
     with col5:
         recurs = st.selectbox("Recurs", ["none", "daily", "weekly"])
+    with col6:
+        # st.time_input returns a datetime.time; formatting it guarantees a
+        # zero-padded "HH:MM" string, which is what sort_by_time expects.
+        start_time = st.time_input("Start time", value=time(9, 0))
 
     if st.button("Add task"):
         task = Task(
@@ -104,18 +133,21 @@ else:
             Priority(priority),
             category,
             Recurrence(recurs),
+            time=start_time.strftime("%H:%M"),
         )
         target_pet.add_task(task)  # Phase 2: Pet.add_task
         st.success(f"Added '{task_title}' to {target_pet.name}.")
 
-    # Show each pet's current tasks (read straight from the persisted objects).
+    # Show each pet's current tasks, sorted by start time (not add order).
+    scheduler = Scheduler()
     for pet in pets:
-        pet_tasks = pet.get_tasks()
+        pet_tasks = scheduler.sort_by_time(pet.get_tasks())  # Phase 4: Scheduler.sort_by_time
         if pet_tasks:
             st.write(f"**{pet.name}'s tasks:**")
             st.table(
                 [
                     {
+                        "time": t.time,
                         "title": t.name,
                         "duration (min)": t.duration,
                         "priority": t.priority.value,
@@ -162,5 +194,25 @@ if st.button("Generate schedule"):
                     for t in plan.deferred_tasks
                 ]
             )
+
+        # --- Conflict warnings (Phase 4: DailyPlan.conflicts) --------------
+        st.markdown("#### Time Conflicts")
+        if plan.conflicts:
+            # Map each task object to its pet's name so we can tell the owner
+            # exactly who is affected (same pet, or a clash across two pets).
+            task_pet = {id(t): p.name for p in owner.get_pets() for t in p.get_tasks()}
+            for first, second in plan.conflicts:
+                pet_a = task_pet.get(id(first), "?")
+                pet_b = task_pet.get(id(second), "?")
+                whose = pet_a if pet_a == pet_b else f"{pet_a} & {pet_b}"
+                st.warning(
+                    f"⚠️ Conflict ({whose}): "
+                    f"**{first.name}** ({pet_a} @ {first.time}) overlaps "
+                    f"**{second.name}** ({pet_b} @ {second.time}) "
+                    f"— both busy {_overlap_window(first, second)}. "
+                    f"Reschedule one to resolve."
+                )
+        else:
+            st.success("✅ No time conflicts — this schedule is conflict-free.")
 
         st.info(plan.reasoning)

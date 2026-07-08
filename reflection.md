@@ -28,6 +28,7 @@ Yes. I had the AI review my design and made two changes. I removed explain_reaso
 
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
+Priority
 
 **b. Tradeoffs**
 
@@ -58,12 +59,13 @@ My conflict detection only looks at the time of day, not the date. It treats eve
 
 - What behaviors did you test?
 - Why were these tests important?
+I tested sorting tasks by time, filtering by pet and status, and recurring tasks.
 
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
 - What edge cases would you test next if you had more time?
-
+4/5 is the confidence level. The 22 passed test made up for my rating. Some edge cases like the time.
 ---
 
 ## 5. Reflection
@@ -71,14 +73,18 @@ My conflict detection only looks at the time of day, not the date. It treats eve
 **a. What went well**
 
 - What part of this project are you most satisfied with?
+I am satified the way I was able to use AI to simplify the UML for me and give me all types of cases.
 
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
 
+
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+I learned that AI can be wrong so you should review the output. I also learned that it can be quick and save you time on things that are going to take longer if done on own. Using tools like these can speed up proecess for actions that take long and shouldnt.
 
 ## Sample Output:
 ========================================

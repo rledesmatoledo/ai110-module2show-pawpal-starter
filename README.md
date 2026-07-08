@@ -67,25 +67,53 @@ tests/test_pawpal.py ......................                                     
 
 ========================================================================================= 22 passed in 0.02s ==========================================================================================
 Confidence level 4/5 stars 
-## 📐 Smarter Scheduling
+## ✨ Features
 
-> Fill in once you've implemented scheduling logic.
+- **Sort by time** — puts a pet's tasks in order from earliest to latest (`Scheduler.sort_by_time`).
+- **Filter tasks** — show just one pet's tasks, or just the ones that aren't done yet (`Owner.filter_tasks`).
+- **Daily & weekly recurrence** — finish a recurring task and the next one is created automatically, a day or a week later (`Task.mark_complete`, `Pet.complete_task`).
+- **Conflict warnings** — flags two tasks whose times overlap, for the same pet or across pets (`Scheduler.find_conflicts`).
+- **Daily plan** — fits the most important tasks into the time you have, defers the rest, and explains the result (`Scheduler.generate_plan`).
 
-| Feature | Method(s) | Notes |
-|---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+One thing to know: conflict warnings only look at the time of day, not the date, so a daily task and tomorrow's copy at the same time can show a harmless conflict (see `reflection.md`, 2b).
 
-## 📸 Demo Walkthrough
+## 🎬 Demo Walkthrough
 
-Describe your app in numbered steps so a reader can follow along without watching a video:
+Run the app with `streamlit run app.py`. You can set the owner's name, add pets, give each pet tasks (title, duration, priority, recurrence, and a start time), and then build a daily schedule from the time you have available.
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+A typical run looks like this:
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+1. Add a pet — say coco the bully.
+2. Add a couple of tasks, like a 07:00 walk and a 14:15 vet visit.
+3. Enter how many minutes you have today and generate the schedule.
+4. See what fit, what got deferred, and any conflict warnings.
+
+Along the way the scheduler sorts tasks by time, filters them by pet or status, regenerates recurring tasks when you complete them, and warns you when two tasks overlap.
+
+### Sample CLI output
+
+`main.py` runs the same logic in the terminal. `python3 main.py` prints:
+
+```text
+============================================
+Conflict detection: overlapping time windows
+============================================
+  WARNING (same pet): Milo's 'Feed' @ 08:00 (+10m) overlaps Milo's 'Give pill' @ 08:00 (+5m)
+  WARNING (different pets): Coco's 'Sunbathe' @ 08:00 (+20m) overlaps Milo's 'Feed' @ 08:00 (+10m)
+
+============================================
+Today's Schedule for Alex
+(Available time: 60 minutes)
+============================================
+
+Scheduled (in time order):
+  07:00  Morning walk (30 min, high)
+  18:30  Evening walk (30 min, high)
+
+Deferred (didn't fit):
+  - Feed (10 min, high)
+  - Vet checkup (60 min, low)
+
+Total time used: 60 / 60 minutes
+Reasoning: Scheduled 2 of 7 task(s) in priority order, using 60 of 60 available minutes. Deferred 5 task(s) that did not fit.
+```
