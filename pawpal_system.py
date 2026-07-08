@@ -83,6 +83,7 @@ class DailyPlan:
     scheduled_tasks: list[Task]
     total_time: int          # minutes
     reasoning: str
+    deferred_tasks: list[Task] = field(default_factory=list)
 
 
 class Scheduler:
@@ -94,8 +95,4 @@ class Scheduler:
 
     def prioritize_tasks(self, tasks: list[Task]) -> list[Task]:
         """Return tasks ordered by priority (and any other criteria)."""
-        raise NotImplementedError
-
-    def explain_reasoning(self) -> str:
-        """Return a human-readable explanation of the last generated plan."""
         raise NotImplementedError

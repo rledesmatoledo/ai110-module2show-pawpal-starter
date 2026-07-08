@@ -11,11 +11,14 @@
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+I used four main classes. Owner holds a name and a list of pets. Pet holds its name, species, breed, and a list of tasks. Task holds the details of one care item (name, duration, priority, category, and whether it recurs). Scheduler does the actual work: it takes a pet's tasks and the available time, prioritizes them, and builds a daily plan with reasoning. I kept the scheduling logic in Scheduler so Pet and Task stay simple data holders. I also added a DailyPlan to hold the result and its reasoning, plus Priority and Recurrence enums so those fields have fixed values instead of loose strings.
 
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+
+Yes. I had the AI review my design and made two changes. I removed explain_reasoning() from Scheduler since DailyPlan already had a reasoning field, so it was storing the same thing twice. I also added a deferred_tasks list to DailyPlan to show tasks that didn't fit in the time available.
 
 ---
 
